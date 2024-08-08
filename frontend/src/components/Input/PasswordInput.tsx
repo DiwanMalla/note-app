@@ -1,7 +1,16 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
-const PasswordInput = ({ value, onChange, placeholder }) => {
+interface PasswordInput {
+  value: string;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+}
+const PasswordInput: React.FC<PasswordInput> = ({
+  value,
+  onChange,
+  placeholder,
+}) => {
   const [isShowPassword, setIsShowPassword] = useState(false);
 
   const togglePassword = () => {
