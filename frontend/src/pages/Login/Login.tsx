@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import PasswordInput from "../../components/Input/PasswordInput";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { validateEmail } from "../../utilis/helper";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const handleLogin = (e) => {
+  const handleLogin = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       setError("Please enter a valid email address");
@@ -36,7 +36,13 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <PasswordInput value={password} onChange={(e) => e.target.value} />
+            <PasswordInput
+              value={password}
+              onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                setPassword(e.target.value)
+              }
+              placeholder={`Password`}
+            />
 
             {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
             <button className="btn-primary">Login</button>
