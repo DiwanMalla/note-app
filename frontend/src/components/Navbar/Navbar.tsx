@@ -8,7 +8,8 @@ const Navbar = () => {
         <ProfileInfo />
       </div>
       <p className="text-center text-3xl py-6">
-        Page is Under development. Keep check for update <br />
+        Page is under development. Keep checking for an update.
+        <br />
         Thanks
       </p>
     </div>
