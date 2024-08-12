@@ -98,3 +98,32 @@ export const DeleteNote = async (req, res) => {
       .json({ error: false, message: `Note Deleted Succesfully` });
   } catch (err) {}
 };
+
+export const UpdatePinned = async (req, res) => {
+  const noteID = req.params.noteID;
+  const { isPinned } = req.body;
+  const { user } = req.user;
+  console.log(noteID);
+  if (!isPinned) {
+    return res
+      .status(400)
+      .json({ error: true, message: `No changes provided` });
+  }
+  try {
+    const note = await NoteModel.findOne({ _id: noteID, userId: user._id });
+    console.log(note);
+    if (!note) {
+      return res.status(200).json({ error: true, message: `Note not found` });
+    }
+
+    if (isPinned) note.isPinned = isPinned;
+    await note.save();
+    return res
+      .status(200)
+      .json({ error: false, note, message: "Note Pinned Succesfully" });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: true, message: `Internal Server Error` });
+  }
+};
