@@ -1,7 +1,7 @@
 import UserModel from "../models/user_models.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import NoteModel from "../models/note_models.js";
+
 dotenv.config();
 export const createAccount = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -46,6 +46,7 @@ export const createAccount = async (req, res) => {
 
 export const Login = async (req, res) => {
   const { email, password } = req.body;
+
   if (!email) {
     return res.status(400).json({
       error: true,
@@ -78,39 +79,5 @@ export const Login = async (req, res) => {
       error: true,
       message: "Invalid Info",
     });
-  }
-};
-
-export const AddNote = async (req, res) => {
-  const { title, content, tags } = req.body;
-  const { user } = req.user;
-  if (!title) {
-    return res.status(400).json({ error: true, message: "Title is required" });
-  }
-  if (!content) {
-    return res
-      .status(400)
-      .json({ error: true, message: "Content is required" });
-  }
-  if (!tag) {
-    return res.status(400).json({ error: true, message: "Tag is required" });
-  }
-  try {
-    const note = new NoteModel({
-      title,
-      content,
-      tags: tags || [],
-      userId: user._id,
-    });
-    await note.save();
-    return res.json({
-      error: false,
-      note,
-      message: "Note added successfully",
-    });
-  } catch (err) {
-    return res
-      .status(400)
-      .json({ error: true, message: "Internal server error" });
   }
 };
