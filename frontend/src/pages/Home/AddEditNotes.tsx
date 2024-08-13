@@ -88,46 +88,42 @@ const AddEditNotes: React.FC<AddEditNotesProps> = ({
     }
   };
   return (
-    <div className="relative">
+    <div className="relative p-4 sm:p-6 md:p-8 lg:p-10">
       <button
-        className="w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-200"
+        className="w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-200 md:w-12 md:h-12"
         onClick={() => {
           onClose();
         }}
       >
-        <MdClose className="text-xl text-slate-400" />
+        <MdClose className="text-xl text-slate-400 md:text-2xl" />
       </button>
-      <div className="flex flex-col gap-2">
-        <label className="input-label">TITLE</label>
+      <div className="flex flex-col gap-4">
+        <label className="text-sm font-semibold text-gray-700">TITLE</label>
         <input
           type="text"
-          className="text-2xl text-slate-950 outline-none"
+          className="text-lg text-slate-950 outline-none bg-white border border-gray-300 rounded p-2"
           placeholder="Gi To Gym At 5"
           value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
+          onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-      <div className="flex flex-col gap-2 mt-4">
-        <label className="input-label">CONTENT</label>
+      <div className="flex flex-col gap-4 mt-4">
+        <label className="text-sm font-semibold text-gray-700">CONTENT</label>
         <textarea
           typeof="text"
-          className="text-sm text-slate-950 outline-none bg-slate-50 p-2 rounded"
+          className="text-sm text-slate-950 outline-none bg-slate-50 border border-gray-300 p-2 rounded resize-none"
           placeholder="Content"
           rows={10}
           value={content}
-          onChange={(e) => {
-            setContent(e.target.value);
-          }}
+          onChange={(e) => setContent(e.target.value)}
         />
       </div>
-      <div className="mt-3">
-        <label className="input-label">TAGS</label>
+      <div className="mt-4">
+        <label className="text-sm font-semibold text-gray-700">TAGS</label>
         <TagInput tags={tags} setTags={setTags} />
       </div>
-      {error && <p className="text-red-500 text-xs pt-4">{error}</p>}
-      <button className="btn-primary" onClick={handleAddNote}>
+      {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+      <button className="btn-primary mt-4" onClick={handleAddNote}>
         {type === "edit" ? "UPDATE" : "ADD"}
       </button>
     </div>

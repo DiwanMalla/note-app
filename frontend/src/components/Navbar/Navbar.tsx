@@ -27,10 +27,10 @@ const Navbar: React.FC<NavbarProp> = ({ userInfo, onSearchNote, AllNotes }) => {
   };
 
   return (
-    <div>
-      <div className="bg-white drop-shadow flex justify-between px-6 py-5 items-center">
-        <h2 className="text-xl font-medium">Notes</h2>
+    <div className="bg-white shadow-md flex flex-col md:flex-row md:justify-between px-4 md:px-6 py-3 md:py-5 items-center">
+      <h2 className="text-xl font-semibold">Notes</h2>
 
+      <div className="flex flex-col md:flex-row md:items-center gap-4 mt-3 md:mt-0">
         <SearchBar
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}

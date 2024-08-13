@@ -149,9 +149,9 @@ const Home = () => {
         onSearchNote={onSearchNote}
         AllNotes={AllNotes}
       />
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4">
         {notes.length > 0 ? (
-          <div className="grid mx-2 grid-col-1 sm:grid-cols-3 gap-4 mt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
             {notes.map((note) => (
               <NoteCard
                 key={note._id}
@@ -172,20 +172,21 @@ const Home = () => {
           <EmptyCard isSearch={isSearch} />
         )}
       </div>
+
       <button
-        className="w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 lg:bottom-10"
+        className="fixed w-16 h-16 flex items-center justify-center rounded-full bg-primary hover:bg-blue-600 right-4 bottom-4 lg:right-10 lg:bottom-10"
         onClick={() => {
           setOpenAddEditMode({ isShown: true, type: "add", data: null });
         }}
       >
-        <MdAdd className="text-[32px] text-white" />
+        <MdAdd className="text-2xl text-white" />
       </button>
       <Modal
         isOpen={openAddEditMode.isShown}
         onRequestClose={() => {}}
         style={{ overlay: { backgroundColor: "rgba(0,0,0,0.2)" } }}
         contentLabel=""
-        className="w-[40%] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5 overflow-scroll"
+        className="w-full max-w-lg sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 bg-white rounded-md mx-auto mt-14 p-5 overflow-auto"
       >
         <AddEditNotes
           type={openAddEditMode.type}
@@ -201,6 +202,7 @@ const Home = () => {
           showToastMessage={showToastMessage}
         />
       </Modal>
+
       <Toast
         isShown={showToastMsg.isShown}
         message={showToastMsg.message}
