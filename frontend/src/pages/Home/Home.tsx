@@ -186,16 +186,9 @@ const Home = () => {
         onRequestClose={() => {}}
         style={{
           overlay: { backgroundColor: "rgba(0,0,0,0.2)" },
-          content: {
-            maxWidth: "100vw",
-            maxHeight: "100vh",
-            margin: "0 auto",
-            padding: "20px",
-            borderRadius: "8px",
-          },
         }}
         contentLabel=""
-        className="overflow-y-auto max-h-screen w-full max-w-lg sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 bg-white rounded-md mx-auto mt-14 p-5 overflow-auto"
+        className="  w-full max-w-lg sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 bg-white rounded-md mx-auto mt-14 p-5 overflow-auto"
       >
         <AddEditNotes
           type={openAddEditMode.type}

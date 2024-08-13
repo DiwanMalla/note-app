@@ -88,7 +88,7 @@ const AddEditNotes: React.FC<AddEditNotesProps> = ({
     }
   };
   return (
-    <div className="overflow-y-auto relative p-4 sm:p-6 md:p-8 lg:p-10">
+    <div className=" relative p-4 sm:p-6 md:p-8 lg:p-10">
       <button
         className="w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-200 md:w-12 md:h-12"
         onClick={() => {
@@ -111,9 +111,9 @@ const AddEditNotes: React.FC<AddEditNotesProps> = ({
         <label className="text-sm font-semibold text-gray-700">CONTENT</label>
         <textarea
           typeof="text"
-          className="text-sm text-slate-950 outline-none bg-slate-50 border border-gray-300 p-2 rounded resize-none"
+          className="text-sm text-slate-950 outline-none bg-slate-50 border border-gray-300 p-2 rounded resize-none md:rows-10 sm:rows-5"
           placeholder="Content"
-          rows={10}
+          rows={6}
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
