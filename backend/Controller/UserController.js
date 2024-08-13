@@ -8,14 +8,13 @@ export const GetUsers = async (req, res) => {
   }
   return res.json({
     error: false,
-    user: [
-      {
-        fullName: isUser.fullName,
-        email: isUser.email,
-        password: isUser.password,
-        createdOn: isUser.createdOn,
-      },
-    ],
+    user: {
+      fullName: isUser.fullName,
+      email: isUser.email,
+      password: isUser.password,
+      createdOn: isUser.createdOn,
+    },
+
     message: "User detail retrived succesfully",
   });
 };

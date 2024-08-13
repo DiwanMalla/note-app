@@ -6,6 +6,7 @@ import {
   DeleteNote,
   EditNote,
   GetAllNotes,
+  SearchNote,
   UpdatePinned,
 } from "../Controller/NoteController.js";
 import { GetUsers } from "../Controller/UserController.js";
@@ -20,4 +21,5 @@ router
   .route("/update-note-pinned/:noteID")
   .put(authenticateToken, UpdatePinned);
 router.route("/get-user").get(authenticateToken, GetUsers);
+router.route("/search-notes/").get(authenticateToken, SearchNote);
 export default router;

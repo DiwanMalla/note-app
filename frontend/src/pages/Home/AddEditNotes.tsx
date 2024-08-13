@@ -1,30 +1,75 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TagInput from "../../components/Input/TagInput";
 import { MdClose } from "react-icons/md";
+import axiosInstance from "../../utilis/axiosInstance";
 
+interface Note {
+  _id: number;
+  title: string;
+  createdOn: string;
+  content: string;
+  tags: string[];
+  isPinned: boolean;
+}
 interface AddEditNotesProps {
-  noteData: null;
+  noteData: Note | null;
   type: string;
   onClose: () => void;
+  AllNote: () => void;
+  showToastMessage: (message: string, type: string) => void;
 }
 const AddEditNotes: React.FC<AddEditNotesProps> = ({
   noteData,
   type,
   onClose,
+  AllNote,
+  showToastMessage,
 }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(noteData?.title || "");
+  const [content, setContent] = useState(noteData?.content || "");
 
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(noteData?.tags || []);
   const [error, setError] = useState("");
 
+  useEffect(() => {});
   //Add note
   const addNewNote = async () => {
-    console.log(noteData);
+    try {
+      const response = await axiosInstance.post("/add-note", {
+        title,
+        content,
+        tags,
+      });
+      if (response.data?.note) {
+        onClose();
+        showToastMessage("Added", "add");
+        AllNote();
+      }
+    } catch (err) {
+      console.log(`Unexpected error occured ${err}`);
+    }
   };
 
   //Edit Note
-  const editNote = async () => {};
+  const editNote = async () => {
+    if (noteData) {
+      const noteID = noteData._id;
+      try {
+        const response = await axiosInstance.put(`/edit-note/` + noteID, {
+          title,
+          content,
+          tags,
+        });
+        if (response.data?.note) {
+          onClose();
+          showToastMessage("Updated", "edit");
+          AllNote();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
   const handleAddNote = () => {
     if (!title) {
       setError("Please enter the title");
@@ -83,7 +128,7 @@ const AddEditNotes: React.FC<AddEditNotesProps> = ({
       </div>
       {error && <p className="text-red-500 text-xs pt-4">{error}</p>}
       <button className="btn-primary" onClick={handleAddNote}>
-        ADD
+        {type === "edit" ? "UPDATE" : "ADD"}
       </button>
     </div>
   );

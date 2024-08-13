@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import PasswordInput from "../../components/Input/PasswordInput";
 import { SetStateAction, useState } from "react";
 import { validateEmail } from "../../utilis/helper";
+import axiosInstance from "../../utilis/axiosInstance";
+import { AxiosError } from "axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const handleLogin = (e: { preventDefault: () => void }) => {
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       setError("Please enter a valid email address");
@@ -20,6 +24,26 @@ const Login = () => {
     setError("");
 
     //Login API call
+    try {
+      const response = await axiosInstance.post("/login", {
+        email: email,
+        password: password,
+      });
+
+      //handle succesful login response
+      if (response.data && response.data.accessToken) {
+        localStorage.setItem("token", response.data.accessToken);
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response?.data?.message) {
+          setError(err.response.data.message);
+        } else {
+          setError("Unexpected error occured. Please try again");
+        }
+      }
+    }
   };
   return (
     <>

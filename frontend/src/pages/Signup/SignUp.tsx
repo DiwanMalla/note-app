@@ -1,14 +1,18 @@
 import { useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import PasswordInput from "../../components/Input/PasswordInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { validateEmail } from "../../utilis/helper";
+import axiosInstance from "../../utilis/axiosInstance";
+import { AxiosError } from "axios";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (!name) {
@@ -19,6 +23,29 @@ const SignUp = () => {
     }
     if (!password) {
       setError("Please enter the password");
+    }
+    setError("");
+
+    //SignUp API call
+    try {
+      const response = await axiosInstance.post("/create-account", {
+        fullName: name,
+        email: email,
+        password: password,
+      });
+      //handle succesfull signup response
+      if (response.data?.accessToken) {
+        localStorage.setItem("token", response.data.accessToken);
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response?.data?.message) {
+          setError(err.response.data.message);
+        } else {
+          setError(`An unexpected Error occured. Please try again`);
+        }
+      }
     }
   };
   return (

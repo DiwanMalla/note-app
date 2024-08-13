@@ -2,8 +2,14 @@ import { MdAdd } from "react-icons/md";
 import NoteCard from "../../components/Cards/NoteCard";
 import Navbar from "../../components/Navbar/Navbar";
 import AddEditNotes from "./AddEditNotes";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../utilis/axiosInstance";
+import { AxiosError } from "axios";
+import Toast from "../../components/ToastMessage/Toast";
+import EmptyCard from "../../components/Cards/EmptyCard";
+
 const Home = () => {
   const [openAddEditMode, setOpenAddEditMode] = useState({
     isShown: false,
@@ -11,22 +17,160 @@ const Home = () => {
     data: null,
   });
 
+  //Toast Message
+  const [showToastMsg, setShowToastMsg] = useState({
+    isShown: true,
+    message: "",
+    type: "add",
+  });
+
+  const showToastMessage = (message: string, type: string) => {
+    setShowToastMsg({
+      isShown: true,
+      message: `Note ${message} Succesfully`,
+      type,
+    });
+  };
+  const handleCloseToast = () => {
+    setShowToastMsg({ isShown: false, message: "", type: "" });
+  };
+  interface Note {
+    _id: number;
+    title: string;
+    createdOn: string;
+    content: string;
+    tags: string[];
+    isPinned: boolean;
+  }
+  const [userInfo, setUserInfo] = useState(null);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [isSearch, setIsSearch] = useState(false);
+  const navigate = useNavigate();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleEdit = (noteDetail: any) =>
+    setOpenAddEditMode({
+      isShown: true,
+      type: "edit",
+      data: noteDetail,
+    });
+
+  //getUserInfo
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data?.user) {
+        setUserInfo(response.data.user);
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response?.status === 400) {
+          localStorage.clear();
+          navigate("/login");
+        }
+      }
+    }
+  };
+
+  //get all notes
+  const AllNotes = async () => {
+    try {
+      const response = await axiosInstance.get("/get-all-notes");
+      if (response.data?.notes) {
+        setNotes(response.data.notes);
+      }
+      console.log(notes);
+    } catch (err) {
+      console.log(`Unexpected error occured ${err}`);
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleDelete = async (data: any) => {
+    const noteId = data._id;
+
+    try {
+      const response = await axiosInstance.delete("/delete-note/" + noteId, {});
+      if (response.data && !response.data.error) {
+        showToastMessage("Deleted", "delete");
+        AllNotes();
+      }
+      // if(response.data)
+    } catch (err) {
+      console.log(`Unexpected Error occured. Please try again ${err}`);
+    }
+  };
+
+  //Search
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSearchNote = async (query: any) => {
+    try {
+      const response = await axiosInstance.get("/search-notes", {
+        params: { query },
+      });
+      if (response.data && response.data.notes) {
+        setIsSearch(true);
+        setNotes(response.data.notes);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handlePinned = async (note: any) => {
+    const noteID = note._id;
+    console.log(note.isPinned);
+    try {
+      const response = await axiosInstance.put(
+        "/update-note-pinned/" + noteID,
+        {
+          isPinned: !note.isPinned,
+        }
+      );
+      if (response.data?.note) {
+        showToastMessage("Updated", "pin");
+        AllNotes();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getUserInfo();
+    AllNotes();
+    return () => {};
+  }, []);
+
   return (
     <div>
-      <Navbar />
+      <Navbar
+        userInfo={userInfo}
+        onSearchNote={onSearchNote}
+        AllNotes={AllNotes}
+      />
       <div className="container mx-auto">
-        <div className="grid grid-cols-3 gap-4 mt-8">
-          <NoteCard
-            title="Meeting on 10 aug"
-            date="3rd Apr 2024"
-            content="Meeting on 7th April Meeting on 7th april"
-            tags="#meeting"
-            isPinned={true}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onPinNote={() => {}}
-          />
-        </div>
+        {notes.length > 0 ? (
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            {notes.map((note) => (
+              <NoteCard
+                key={note._id}
+                title={note.title}
+                date={note.createdOn}
+                content={note.content}
+                tags={note.tags}
+                isPinned={note.isPinned}
+                onEdit={() => handleEdit(note)}
+                onDelete={() => handleDelete(note)}
+                onPinNote={() => {
+                  handlePinned(note);
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyCard isSearch={isSearch} />
+        )}
       </div>
       <button
         className="w-16 h-16 flex items-center justify-center rounded-2xl bg-primary hover:bg-blue-600 absolute right-10 lg:bottom-10"
@@ -53,8 +197,16 @@ const Home = () => {
               data: null,
             })
           }
+          AllNote={AllNotes}
+          showToastMessage={showToastMessage}
         />
       </Modal>
+      <Toast
+        isShown={showToastMsg.isShown}
+        message={showToastMsg.message}
+        type={showToastMsg.type}
+        onClose={handleCloseToast}
+      />
     </div>
   );
 };

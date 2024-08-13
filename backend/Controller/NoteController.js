@@ -96,19 +96,17 @@ export const DeleteNote = async (req, res) => {
     return res
       .status(200)
       .json({ error: false, message: `Note Deleted Succesfully` });
-  } catch (err) {}
+  } catch (err) {
+    res.status(400).json({ message: `${err}` });
+  }
 };
 
 export const UpdatePinned = async (req, res) => {
   const noteID = req.params.noteID;
   const { isPinned } = req.body;
   const { user } = req.user;
-  console.log(noteID);
-  if (!isPinned) {
-    return res
-      .status(400)
-      .json({ error: true, message: `No changes provided` });
-  }
+  console.log(isPinned);
+
   try {
     const note = await NoteModel.findOne({ _id: noteID, userId: user._id });
     console.log(note);
@@ -116,7 +114,7 @@ export const UpdatePinned = async (req, res) => {
       return res.status(200).json({ error: true, message: `Note not found` });
     }
 
-    if (isPinned) note.isPinned = isPinned;
+    note.isPinned = isPinned;
     await note.save();
     return res
       .status(200)
@@ -125,5 +123,35 @@ export const UpdatePinned = async (req, res) => {
     return res
       .status(500)
       .json({ error: true, message: `Internal Server Error` });
+  }
+};
+
+export const SearchNote = async (req, res) => {
+  const { user } = req.user;
+  const { query } = req.query;
+  if (!query) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Search query is required" });
+  }
+  try {
+    const matchingNotes = await NoteModel.find({
+      userId: user._id,
+      $or: [
+        {
+          title: { $regex: new RegExp(query, "i") },
+          content: { $regex: new RegExp(query, "i") },
+        },
+      ],
+    });
+    return res.status(200).json({
+      error: false,
+      notes: matchingNotes,
+      message: "Notes matching the search query retrived succesfully",
+    });
+  } catch (err) {
+    return res
+      .status(400)
+      .json({ error: true, message: "Internal server Error" });
   }
 };
