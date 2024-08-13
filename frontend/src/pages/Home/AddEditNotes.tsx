@@ -88,7 +88,7 @@ const AddEditNotes: React.FC<AddEditNotesProps> = ({
     }
   };
   return (
-    <div className="relative p-4 sm:p-6 md:p-8 lg:p-10">
+    <div className="overflow-y-auto relative p-4 sm:p-6 md:p-8 lg:p-10">
       <button
         className="w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-200 md:w-12 md:h-12"
         onClick={() => {
