@@ -1,9 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import ProfileInfo from "../Cards/ProfileInfo";
 import SearchBar from "../SearchBar/SearchBar";
-import { useState } from "react";
+import React, { useState } from "react";
 
-const Navbar = ({ userInfo, onSearchNote, AllNotes }) => {
+interface NavbarProp {
+  userInfo: { fullName: string } | null;
+  onSearchNote: (searchQuery: string) => void;
+  AllNotes: () => void;
+}
+const Navbar: React.FC<NavbarProp> = ({ userInfo, onSearchNote, AllNotes }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const onLogout = () => {

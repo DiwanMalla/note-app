@@ -2,7 +2,7 @@ import React from "react";
 import { getInitials } from "../../utilis/helper";
 
 interface ProfileInfoProps {
-  userInfo: { fullName: string };
+  userInfo: { fullName: string } | null;
   onLogout: () => void;
 }
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ userInfo, onLogout }) => {
