@@ -50,7 +50,7 @@ const SignUp = () => {
   };
   return (
     <div>
-      <Navbar />
+      <Navbar userInfo={null} onSearchNote={() => {}} AllNotes={() => {}} />
       <div className="flex justify-center items-center mt-28">
         <div className="w-96 border rounded bg-white px-7 py-10">
           <form onSubmit={handleSubmit}>

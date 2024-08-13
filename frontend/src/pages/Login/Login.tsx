@@ -47,7 +47,7 @@ const Login = () => {
   };
   return (
     <>
-      <Navbar />
+      <Navbar userInfo={null} onSearchNote={() => {}} AllNotes={() => {}} />
       <div className="flex items-center justify-center mt-28">
         <div className="w-96 border rounded px-7 py-10 bg-white">
           <form onSubmit={handleLogin}>

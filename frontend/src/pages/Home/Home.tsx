@@ -2,7 +2,7 @@ import { MdAdd } from "react-icons/md";
 import NoteCard from "../../components/Cards/NoteCard";
 import Navbar from "../../components/Navbar/Navbar";
 import AddEditNotes from "./AddEditNotes";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utilis/axiosInstance";
