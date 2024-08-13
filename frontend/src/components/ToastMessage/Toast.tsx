@@ -16,7 +16,7 @@ const Toast: React.FC<ToastProps> = ({ isShown, message, type, onClose }) => {
     return () => {
       clearTimeout(timeOut);
     };
-  }, []);
+  }, [onClose]);
   return (
     <div
       className={`absolute top-[20%] right-6 transition-all duration-400 ${
