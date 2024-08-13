@@ -39,11 +39,6 @@ const Navbar: React.FC<NavbarProp> = ({ userInfo, onSearchNote, AllNotes }) => {
         />
         <ProfileInfo onLogout={onLogout} userInfo={userInfo} />
       </div>
-      <p className="text-center text-3xl py-6">
-        Page is under development. Keep checking for an update.
-        <br />
-        Thanks
-      </p>
     </div>
   );
 };
